@@ -42,7 +42,6 @@ fi
 
 set -f
 word="$1"
-set +f
 
 dmp="$(lynx -dump www.bing.com/search?q=define+"$word")"
 
