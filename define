@@ -40,7 +40,9 @@ fi
 
 # Main function (Ding Bictionary script)
 
-word="$(echo $1 | grep "[^[:punct:]]")"
+set -f
+word="$1"
+set +f
 
 dmp="$(lynx -dump www.bing.com/search?q=define+"$word")"
 
