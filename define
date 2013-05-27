@@ -3,12 +3,12 @@
 # define
 # version 1.3
 
+
 # Declare the messy dictionary.com function
 # This runs only if we can't find the definition on Ding.com
 
 messydict ()
 {
-# version 1.3
 
 messydmp="$(lynx -dump dictionary.reference.com/browse/"$word")"
 
@@ -16,33 +16,31 @@ cleanedup="$(echo "$messydmp" | head -60 | sed -e 's/^[ \t]*//' -e 's/\[.*\]//g'
 
 firstdef="$(echo "$cleanedup" | sed -nr '/^(noun|verb|adjective)/{:a;N;/\n*\.$/!ba;p;q}')"
 
-if [ -e $word.html ]; then
-    isword="$(echo "$messydmp" | grep "no dictionary results")"
-    if [ -z "$isword" ]; then
-	echo "$firstdef"
-	if [[ "$firstdef" == *1.* ]]; then
-	    testseconddef="$(echo "$cleanedup" | grep -m1 "^2.*$")"
-	    if [ -n "$testseconddef" ]; then
-		echo "$testseconddef"
-	    else
-		seconddef="$(echo "$cleanedup" | sed -nr '/^2\.\s*/{:a;N;/\n*\.$/!ba;p;q}')"
-		echo "$seconddef"
-	    fi
+
+isword="$(echo "$messydmp" | grep "no dictionary results")"
+
+if [ -z "$isword" ]; then
+    echo "$firstdef"
+    if [[ "$firstdef" == *1.* ]]; then
+	testseconddef="$(echo "$cleanedup" | grep -m1 "^2.*$")"
+	if [ -n "$testseconddef" ]; then
+	    echo "$testseconddef"
 	else
-	    :
+	    seconddef="$(echo "$cleanedup" | sed -nr '/^2\.\s*/{:a;N;/\n*\.$/!ba;p;q}')"
+	    echo "$seconddef"
 	fi
     else
-	echo Unable to define $word
+	:
     fi
 else
-    echo "Couldn't look up " $word
+    echo Unable to define $word
 fi
 }
 
 
 # Main function (Ding Bictionary script)
 
-word=$1
+word="$(echo $1 | grep "[^[:punct:]]")"
 
 dmp="$(lynx -dump www.bing.com/search?q=define+"$word")"
 
