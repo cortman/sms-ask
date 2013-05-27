@@ -7,8 +7,6 @@
 # Declare the messy dictionary.com function
 # This runs only if we can't find the definition on Ding.com
 
-set -f
-
 messydict ()
 {
 
